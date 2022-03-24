@@ -31,7 +31,7 @@ LinkList init_link_list(int length)
 	head = creat_node(head);	//头节点
 	a = creat_node(a);		//首元节点
 	head->next = a;
-	head->data.score = length;
+	head->data.score = length;	//头节点储存链表长度
 	temp = a;			//指针用于遍历初始化
 
 	for (i = 0; i < length; i++) {
@@ -40,6 +40,50 @@ LinkList init_link_list(int length)
 		temp->next = l;
 		temp = temp->next;
 	}
+	return head;
+}
+
+LinkList insert_node(LinkList head, LinkList new, int index)
+{
+	LinkList temp;
+	int i;
+
+	if (index > head->data.score - 1 || index < 0) {
+		printf("Insert node to linklist failed! Check index!\n");
+		/* 返回原链表 */
+		return head;
+	}
+
+	temp = head;
+
+	for (i = 0; i < head->data.score; i++) {
+		temp = temp->next;
+		if (i == index) {
+			new->next = temp->next;	//保护现场
+			temp->next = new;
+			temp = new;
+		}
+	}
+
+	return head;
+}
+
+LinkList delate_node(LinkList head, int index)
+{
+	LinkList temp;
+	LinkList n;
+	int i;
+
+	temp = head;
+	for (i = 0; i < head->data.score; i++) {
+		if (i == index) {
+			n = temp->next;
+			temp->next = n->next;
+			free(n);
+		}
+		temp = temp->next;
+	}
+
 	return head;
 }
 
@@ -56,7 +100,7 @@ void info_link_list(LinkList l) {
 	}
 }
 
-int example ()
+int example(void)
 {
 	int var_runoob = 10;
 	int *p;
@@ -69,8 +113,16 @@ int example ()
 void main(void)
 {
 	LinkList l;
+	LinkList n;
 
 	l = init_link_list(15);
+
+	n = creat_node(n);
+	n->data.score = 99;
+
+	l = insert_node(l, n, 14);
+
+	delate_node(l, 1);
 
 	info_link_list(l);
 
