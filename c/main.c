@@ -136,7 +136,7 @@ void main(void)
 	n = creat_node(n);
 	n->data.score = 99;
 
-	l = insert_node(l, n, 14);
+	insert_node(l, n, 14);
 
 	delate_node(l, 1);
 
