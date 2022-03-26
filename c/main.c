@@ -87,6 +87,22 @@ LinkList delate_node(LinkList head, int index)
 	return head;
 }
 
+void free_link_list(LinkList head)
+{
+	LinkList temp;
+	LinkList n;
+	int i;
+
+	temp = head;
+
+	for (i = 0; i < head->data.score; i++) {
+		n = temp->next;
+		temp->next = n->next;
+		free(n);
+	}
+
+}
+
 void info_link_list(LinkList l) {
 	int score;
 	int len;
@@ -123,6 +139,8 @@ void main(void)
 	l = insert_node(l, n, 14);
 
 	delate_node(l, 1);
+
+	free_link_list(l);
 
 	info_link_list(l);
 
