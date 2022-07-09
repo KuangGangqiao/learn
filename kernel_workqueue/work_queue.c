@@ -18,6 +18,8 @@ static struct delayed_work ms_queue_work;
 void work_func(struct work_struct *work)
 {
 	printk("hello work queue\n");
+	/* If you want to call the handler all
+	 * the time, put it in the handler */
 	schedule_delayed_work(&ms_queue_work, 250);
 }
 
