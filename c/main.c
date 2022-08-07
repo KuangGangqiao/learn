@@ -125,9 +125,70 @@ int example(void)
 	return 0;
 }
 
+#define MAXSIZE	8
+struct stack {
+	int *top;	//引用类型不占空间
+	int *bottom;	//引用类型不占空间
+	int depth;	//4 bytes
+	/* 4 bytes, 但是如果你要访问整个数组
+	 * 的话需要多分配一些空间
+	 * ，不然就会出现跨界访问内存的问题 */
+	int number[10];
+};
+
+struct stack *creat_stack(struct stack *s)
+{
+	/*(struct stack *) 表示强制转化为指针类型*/
+	s = (struct stack *)malloc(sizeof(s) * MAXSIZE);
+
+	return s;
+}
+
+static void free_stack(struct stack *s)
+{
+	if (!s)
+		free(s);
+}
+
+static void insert_operation(struct stack *s, int n)
+{
+	/* 通过指针修改数组的值 */
+	*(s->top) = n;
+	s->top ++;
+	s->depth = s->top - s->bottom;
+}
+
+static int stack_by_array(void)
+{
+	struct stack *s;
+	int i;
+
+	s = creat_stack(s);
+	s->top = s->bottom = &s->number[0];
+
+	for (i = 0; i< 11; i++) {
+		insert_operation(s, i);
+		/* --s->top 的原因是它先 ++ 了*/
+		printf("addr:%p, val: %d\n", s->top, *(s->top - 1));
+		if (s->depth > 10)
+			break;
+	}
+
+	printf("stack_size: %ld\n", sizeof(s));
+	printf("length: %ld\n", s->top - s->bottom);
+
+	for (i = 0; i < 10; i++) {
+		printf("number%d: %d\n", i, s->number[i]);
+	}
+
+	free_stack(s);
+
+	return 0;
+}
 
 void main(void)
 {
+#if 0
 	LinkList l;
 	LinkList n;
 
@@ -143,6 +204,10 @@ void main(void)
 	free_link_list(l);
 
 	info_link_list(l);
+#else
+	stack_by_array();
+
+#endif
 
 	printf("Hello world!\n");
 }
