@@ -18,13 +18,19 @@ struct person
 		struct {
 			int  _area_code;
 			long _phone_number;
+			int test;
 		};
 	};
 };
 
 int main(void)
 {
+	//这种方式赋值是CPU自动在栈空间赋值的，栈空间是连续的
+	//堆空间是不连续的，且由手动分配
 	struct person jim = {"jim", 'F', 28, 65, {21, 58545566}};
+	jim.test = 20;
 	printf("jim.area_code: %d\n", jim.area_code);
 	printf("jim,_area_code: %d\n", jim._area_code);
+	printf("jim,_phone_number: %d\n", *(&(jim.area_code) + 2));
+	printf("jim,test: %d\n", *(&(jim.area_code) + 4));
 }
