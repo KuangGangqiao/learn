@@ -859,12 +859,6 @@ config FEATURE_WC_LARGE
 	depends on WC
 	help
 	Use "unsigned long long" for counter variables.
-config WHOAMI
-	bool "whoami (3.2 kb)"
-	default y
-	help
-	whoami is used to print the username of the current
-	user id (same as id -un).
 config WHO
 	bool "who (3.9 kb)"
 	default y
@@ -885,6 +879,12 @@ config USERS
 	depends on FEATURE_UTMP
 	help
 	Print users currently logged on.
+config WHOAMI
+	bool "whoami (3.2 kb)"
+	default y
+	help
+	whoami is used to print the username of the current
+	user id (same as id -un).
 config YES
 	bool "yes (1.2 kb)"
 	default y

@@ -14,5 +14,9 @@ pack:
 setup_env:
 	apt-get install qemu-system-x86
 start:
-	qemu-system-x86_64 -kernel ${OBJ_PATH}${OBJ_KERNEL}/arch/x86_64/boot/bzImage \
-	-hda ./busybox-1.32.0/rootfs.img  -append "root=/dev/sda console=ttyS0" -nographic
+	qemu-system-x86_64 \
+	-kernel ${OBJ_PATH}${OBJ_KERNEL}/arch/x86_64/boot/bzImage \
+	-hda ./busybox-1.32.0/rootfs.img \
+	-append "root=/dev/sda console=ttyS0" \
+	-nographic \
+	-gdb tcp::9000 #set port_id

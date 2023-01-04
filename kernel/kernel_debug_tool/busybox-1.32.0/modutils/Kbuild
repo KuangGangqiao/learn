@@ -17,10 +17,10 @@ ifneq ($(CONFIG_MODPROBE_SMALL),y)
 lib-$(CONFIG_LSMOD) += lsmod.o modutils.o
 endif
 lib-$(CONFIG_MODINFO) += modinfo.o modutils.o
+lib-$(CONFIG_MODPROBE_SMALL) += modprobe-small.o
 ifneq ($(CONFIG_MODPROBE_SMALL),y)
 lib-$(CONFIG_MODPROBE) += modprobe.o modutils.o
 endif
-lib-$(CONFIG_MODPROBE_SMALL) += modprobe-small.o
 lib-$(CONFIG_FEATURE_2_4_MODULES) += modutils-24.o
 ifneq ($(CONFIG_MODPROBE_SMALL),y)
 lib-$(CONFIG_RMMOD) += rmmod.o modutils.o

@@ -7,9 +7,9 @@
 
 lib-y:=
 
-lib-$(CONFIG_ADDGROUP) += addgroup.o
 lib-$(CONFIG_ADD_SHELL)    += add-remove-shell.o
 lib-$(CONFIG_REMOVE_SHELL) += add-remove-shell.o
+lib-$(CONFIG_ADDGROUP) += addgroup.o
 lib-$(CONFIG_ADDUSER) += adduser.o
 lib-$(CONFIG_CHPASSWD) += chpasswd.o
 lib-$(CONFIG_CRYPTPW) += cryptpw.o

@@ -92,6 +92,17 @@ config USE_BB_CRYPT_SHA
 	With this option off, login will fail password check for any
 	user which has password encrypted with these algorithms.
 
+config ADD_SHELL
+	bool "add-shell (3.1 kb)"
+	default y if DESKTOP
+	help
+	Add shells to /etc/shells.
+
+config REMOVE_SHELL
+	bool "remove-shell (3 kb)"
+	default y if DESKTOP
+	help
+	Remove shells from /etc/shells.
 config ADDGROUP
 	bool "addgroup (8.6 kb)"
 	default y
@@ -107,17 +118,6 @@ config FEATURE_ADDUSER_TO_GROUP
 	If called with two non-option arguments,
 	addgroup will add an existing user to an
 	existing group.
-config ADD_SHELL
-	bool "add-shell (3.1 kb)"
-	default y if DESKTOP
-	help
-	Add shells to /etc/shells.
-
-config REMOVE_SHELL
-	bool "remove-shell (3 kb)"
-	default y if DESKTOP
-	help
-	Remove shells from /etc/shells.
 config ADDUSER
 	bool "adduser (15 kb)"
 	default y

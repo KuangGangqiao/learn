@@ -355,12 +355,6 @@ config FBSPLASH
 	- commands for fifo:
 	    "NN" (ASCII decimal number) - percentage to show on progress bar
 	    "exit" - well you guessed it
-config FLASHCP
-	bool "flashcp (5.3 kb)"
-	default n  # doesn't build on Ubuntu 8.04
-	help
-	The flashcp binary, inspired by mtd-utils as of git head 5eceb74f7.
-	This utility is used to copy images into a MTD device.
 config FLASH_ERASEALL
 	bool "flash_eraseall (5.9 kb)"
 	default n  # doesn't build on Ubuntu 8.04
@@ -380,6 +374,12 @@ config FLASH_UNLOCK
 	help
 	The flash_unlock binary from mtd-utils as of git head 5ec0c10d0. This
 	utility unlocks part or all of the flash device.
+config FLASHCP
+	bool "flashcp (5.3 kb)"
+	default n  # doesn't build on Ubuntu 8.04
+	help
+	The flashcp binary, inspired by mtd-utils as of git head 5eceb74f7.
+	This utility is used to copy images into a MTD device.
 config HDPARM
 	bool "hdparm (25 kb)"
 	default y
@@ -748,12 +748,6 @@ config TTYSIZE
 	only height, or both, in any order. It also does not complain on
 	error, but returns default 80x24.
 	Usage in shell scripts: width=`ttysize w`.
-config UBIRENAME
-	bool "ubirename (2.4 kb)"
-	default y
-	select PLATFORM_LINUX
-	help
-	Utility to rename UBI volumes
 config UBIATTACH
 	bool "ubiattach (4.2 kb)"
 	default y
@@ -795,6 +789,12 @@ config UBIUPDATEVOL
 	select PLATFORM_LINUX
 	help
 	Update a UBI volume.
+config UBIRENAME
+	bool "ubirename (2.4 kb)"
+	default y
+	select PLATFORM_LINUX
+	help
+	Utility to rename UBI volumes
 config VOLNAME
 	bool "volname (1.6 kb)"
 	default y

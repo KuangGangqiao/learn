@@ -2,7 +2,7 @@
  * Automatically generated C config: don't edit
  * Busybox version: 1.32.0
  */
-#define AUTOCONF_TIMESTAMP "2022-07-04 10:21:47 CST"
+#define AUTOCONF_TIMESTAMP "2022-10-31 15:53:26 CST"
 
 #define CONFIG_HAVE_DOT_CONFIG 1
 #define ENABLE_HAVE_DOT_CONFIG 1
@@ -2172,14 +2172,6 @@
 # define IF_FEATURE_WC_LARGE(...) __VA_ARGS__
 #endif
 #define IF_NOT_FEATURE_WC_LARGE(...)
-#define CONFIG_WHOAMI 1
-#define ENABLE_WHOAMI 1
-#ifdef MAKE_SUID
-# define IF_WHOAMI(...) __VA_ARGS__ "CONFIG_WHOAMI"
-#else
-# define IF_WHOAMI(...) __VA_ARGS__
-#endif
-#define IF_NOT_WHOAMI(...)
 #define CONFIG_WHO 1
 #define ENABLE_WHO 1
 #ifdef MAKE_SUID
@@ -2204,6 +2196,14 @@
 # define IF_USERS(...) __VA_ARGS__
 #endif
 #define IF_NOT_USERS(...)
+#define CONFIG_WHOAMI 1
+#define ENABLE_WHOAMI 1
+#ifdef MAKE_SUID
+# define IF_WHOAMI(...) __VA_ARGS__ "CONFIG_WHOAMI"
+#else
+# define IF_WHOAMI(...) __VA_ARGS__
+#endif
+#define IF_NOT_WHOAMI(...)
 #define CONFIG_YES 1
 #define ENABLE_YES 1
 #ifdef MAKE_SUID
@@ -3260,22 +3260,6 @@
 # define IF_USE_BB_CRYPT_SHA(...) __VA_ARGS__
 #endif
 #define IF_NOT_USE_BB_CRYPT_SHA(...)
-#define CONFIG_ADDGROUP 1
-#define ENABLE_ADDGROUP 1
-#ifdef MAKE_SUID
-# define IF_ADDGROUP(...) __VA_ARGS__ "CONFIG_ADDGROUP"
-#else
-# define IF_ADDGROUP(...) __VA_ARGS__
-#endif
-#define IF_NOT_ADDGROUP(...)
-#define CONFIG_FEATURE_ADDUSER_TO_GROUP 1
-#define ENABLE_FEATURE_ADDUSER_TO_GROUP 1
-#ifdef MAKE_SUID
-# define IF_FEATURE_ADDUSER_TO_GROUP(...) __VA_ARGS__ "CONFIG_FEATURE_ADDUSER_TO_GROUP"
-#else
-# define IF_FEATURE_ADDUSER_TO_GROUP(...) __VA_ARGS__
-#endif
-#define IF_NOT_FEATURE_ADDUSER_TO_GROUP(...)
 #define CONFIG_ADD_SHELL 1
 #define ENABLE_ADD_SHELL 1
 #ifdef MAKE_SUID
@@ -3292,6 +3276,22 @@
 # define IF_REMOVE_SHELL(...) __VA_ARGS__
 #endif
 #define IF_NOT_REMOVE_SHELL(...)
+#define CONFIG_ADDGROUP 1
+#define ENABLE_ADDGROUP 1
+#ifdef MAKE_SUID
+# define IF_ADDGROUP(...) __VA_ARGS__ "CONFIG_ADDGROUP"
+#else
+# define IF_ADDGROUP(...) __VA_ARGS__
+#endif
+#define IF_NOT_ADDGROUP(...)
+#define CONFIG_FEATURE_ADDUSER_TO_GROUP 1
+#define ENABLE_FEATURE_ADDUSER_TO_GROUP 1
+#ifdef MAKE_SUID
+# define IF_FEATURE_ADDUSER_TO_GROUP(...) __VA_ARGS__ "CONFIG_FEATURE_ADDUSER_TO_GROUP"
+#else
+# define IF_FEATURE_ADDUSER_TO_GROUP(...) __VA_ARGS__
+#endif
+#define IF_NOT_FEATURE_ADDUSER_TO_GROUP(...)
 #define CONFIG_ADDUSER 1
 #define ENABLE_ADDUSER 1
 #ifdef MAKE_SUID
@@ -5012,10 +5012,6 @@
 # define IF_FBSPLASH(...) __VA_ARGS__
 #endif
 #define IF_NOT_FBSPLASH(...)
-#undef CONFIG_FLASHCP
-#define ENABLE_FLASHCP 0
-#define IF_FLASHCP(...)
-#define IF_NOT_FLASHCP(...) __VA_ARGS__
 #undef CONFIG_FLASH_ERASEALL
 #define ENABLE_FLASH_ERASEALL 0
 #define IF_FLASH_ERASEALL(...)
@@ -5028,6 +5024,10 @@
 #define ENABLE_FLASH_UNLOCK 0
 #define IF_FLASH_UNLOCK(...)
 #define IF_NOT_FLASH_UNLOCK(...) __VA_ARGS__
+#undef CONFIG_FLASHCP
+#define ENABLE_FLASHCP 0
+#define IF_FLASHCP(...)
+#define IF_NOT_FLASHCP(...) __VA_ARGS__
 #define CONFIG_HDPARM 1
 #define ENABLE_HDPARM 1
 #ifdef MAKE_SUID
@@ -5408,14 +5408,6 @@
 # define IF_TTYSIZE(...) __VA_ARGS__
 #endif
 #define IF_NOT_TTYSIZE(...)
-#define CONFIG_UBIRENAME 1
-#define ENABLE_UBIRENAME 1
-#ifdef MAKE_SUID
-# define IF_UBIRENAME(...) __VA_ARGS__ "CONFIG_UBIRENAME"
-#else
-# define IF_UBIRENAME(...) __VA_ARGS__
-#endif
-#define IF_NOT_UBIRENAME(...)
 #define CONFIG_UBIATTACH 1
 #define ENABLE_UBIATTACH 1
 #ifdef MAKE_SUID
@@ -5464,6 +5456,14 @@
 # define IF_UBIUPDATEVOL(...) __VA_ARGS__
 #endif
 #define IF_NOT_UBIUPDATEVOL(...)
+#define CONFIG_UBIRENAME 1
+#define ENABLE_UBIRENAME 1
+#ifdef MAKE_SUID
+# define IF_UBIRENAME(...) __VA_ARGS__ "CONFIG_UBIRENAME"
+#else
+# define IF_UBIRENAME(...) __VA_ARGS__
+#endif
+#define IF_NOT_UBIRENAME(...)
 #define CONFIG_VOLNAME 1
 #define ENABLE_VOLNAME 1
 #ifdef MAKE_SUID

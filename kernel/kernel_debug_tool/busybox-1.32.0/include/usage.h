@@ -1343,16 +1343,6 @@
      "\n	--ignore=N	Exclude N CPUs" \
 	) \
 
-#if ENABLE_DESKTOP \
-
-#define od_trivial_usage \
-       "[-abcdfhilovxs] [-t TYPE] [-A RADIX] [-N SIZE] [-j SKIP] [-S MINSTR] [-w WIDTH] [FILE]..." \
-
-#define od_full_usage "\n\n" \
-       "Print FILEs (or stdin) unambiguously, as octal bytes by default" \
-
-#endif \
-
 #if !ENABLE_DESKTOP \
 
 #define od_trivial_usage \
@@ -1360,6 +1350,16 @@
 
 #define od_full_usage "\n\n" \
        "Print FILE (or stdin) unambiguously, as octal bytes by default" \
+
+#endif \
+
+#if ENABLE_DESKTOP \
+
+#define od_trivial_usage \
+       "[-abcdfhilovxs] [-t TYPE] [-A RADIX] [-N SIZE] [-j SKIP] [-S MINSTR] [-w WIDTH] [FILE]..." \
+
+#define od_full_usage "\n\n" \
+       "Print FILEs (or stdin) unambiguously, as octal bytes by default" \
 
 #endif \
 
@@ -1898,12 +1898,6 @@
        "$ wc /etc/passwd\n" \
        "     31      46    1365 /etc/passwd\n" \
 
-#define whoami_trivial_usage \
-       "" \
-
-#define whoami_full_usage "\n\n" \
-       "Print the user name associated with the current effective user id" \
-
 #define users_trivial_usage \
        "" \
 
@@ -1923,6 +1917,12 @@
        "Show who is logged on\n" \
      "\n	-a	Show all" \
      "\n	-H	Print column headers" \
+
+#define whoami_trivial_usage \
+       "" \
+
+#define whoami_full_usage "\n\n" \
+       "Print the user name associated with the current effective user id" \
 
 #define yes_trivial_usage \
        "[STRING]" \
@@ -2567,14 +2567,6 @@
 #define parse_full_usage "\n\n" \
        "	-x	Suppress output (for benchmarking)" \
 
-#define addgroup_trivial_usage \
-       "[-g GID] [-S] " IF_FEATURE_ADDUSER_TO_GROUP("[USER] ") "GROUP" \
-
-#define addgroup_full_usage "\n\n" \
-       "Add a group" IF_FEATURE_ADDUSER_TO_GROUP(" or add a user to a group") "\n" \
-     "\n	-g GID	Group id" \
-     "\n	-S	Create a system group" \
-
 #define add_shell_trivial_usage \
        "SHELL..." \
 
@@ -2586,6 +2578,14 @@
 
 #define remove_shell_full_usage "\n\n" \
        "Remove SHELLs from /etc/shells" \
+
+#define addgroup_trivial_usage \
+       "[-g GID] [-S] " IF_FEATURE_ADDUSER_TO_GROUP("[USER] ") "GROUP" \
+
+#define addgroup_full_usage "\n\n" \
+       "Add a group" IF_FEATURE_ADDUSER_TO_GROUP(" or add a user to a group") "\n" \
+     "\n	-g GID	Group id" \
+     "\n	-S	Create a system group" \
 
 #define adduser_trivial_usage \
        "[OPTIONS] USER [GROUP]" \
@@ -2959,13 +2959,6 @@
      "\n	-f	Control pipe (else exit after drawing image)" \
      "\n			commands: 'NN' (% for progress bar) or 'exit'" \
 
-#define flashcp_trivial_usage \
-       "-v FILE MTD_DEVICE" \
-
-#define flashcp_full_usage "\n\n" \
-       "Copy an image to MTD device\n" \
-     "\n	-v	Verbose" \
-
 #define flash_eraseall_trivial_usage \
        "[-jNq] MTD_DEVICE" \
 
@@ -2987,6 +2980,13 @@
 
 #define flash_unlock_full_usage "\n\n" \
        "Unlock an MTD device" \
+
+#define flashcp_trivial_usage \
+       "-v FILE MTD_DEVICE" \
+
+#define flashcp_full_usage "\n\n" \
+       "Copy an image to MTD device\n" \
+     "\n	-v	Verbose" \
 
 #define hdparm_trivial_usage \
        "[OPTIONS] [DEVICE]" \
@@ -3438,12 +3438,6 @@
 #define ttysize_full_usage "\n\n" \
        "Print dimensions of stdin tty, or 80x24" \
 
-#define ubirename_trivial_usage \
-	"UBI_DEVICE OLD_VOLNAME NEW_VOLNAME [OLD2 NEW2]..." \
-
-#define ubirename_full_usage "\n\n" \
-	"Rename UBI volumes on UBI_DEVICE" \
-
 #define ubiattach_trivial_usage \
        "-m MTD_NUM [-d UBI_NUM] [-O VID_HDR_OFF] UBI_CTRL_DEV" \
 
@@ -3496,6 +3490,12 @@
        "Update UBI volume\n" \
      "\n	-t	Truncate to zero size" \
      "\n	-s SIZE	Size in bytes to resize to" \
+
+#define ubirename_trivial_usage \
+	"UBI_DEVICE OLD_VOLNAME NEW_VOLNAME [OLD2 NEW2]..." \
+
+#define ubirename_full_usage "\n\n" \
+	"Rename UBI volumes on UBI_DEVICE" \
 
 #define volname_trivial_usage \
        "[DEVICE]" \
@@ -3572,6 +3572,46 @@
 
 #define modinfo_example_usage \
        "$ modinfo -F vermagic loop\n" \
+
+#if ENABLE_MODPROBE_SMALL \
+
+#define lsmod_trivial_usage \
+       "" \
+
+#define lsmod_full_usage "\n\n" \
+       "List loaded kernel modules" \
+
+#endif \
+
+#if ENABLE_MODPROBE_SMALL \
+
+#define depmod_trivial_usage "[-n]" \
+
+#define depmod_full_usage "\n\n" \
+       "Generate modules.dep.bb" \
+     "\n" \
+     "\n	-n	Dry run: print file to stdout" \
+
+#define insmod_trivial_usage \
+	"FILE" IF_FEATURE_CMDLINE_MODULE_OPTIONS(" [SYMBOL=VALUE]...") \
+
+#define insmod_full_usage "\n\n" \
+       "Load kernel module" \
+
+#define rmmod_trivial_usage \
+       "MODULE..." \
+
+#define rmmod_full_usage "\n\n" \
+       "Unload kernel modules" \
+
+#define modprobe_trivial_usage \
+	"[-rq] MODULE" IF_FEATURE_CMDLINE_MODULE_OPTIONS(" [SYMBOL=VALUE]...") \
+
+#define modprobe_full_usage "\n\n" \
+       "	-r	Remove MODULE" \
+     "\n	-q	Quiet" \
+
+#endif \
 
 #if !ENABLE_MODPROBE_SMALL \
 
@@ -3653,46 +3693,6 @@
 	) \
 
 #endif /* !ENABLE_MODPROBE_SMALL */ \
-
-#if ENABLE_MODPROBE_SMALL \
-
-#define lsmod_trivial_usage \
-       "" \
-
-#define lsmod_full_usage "\n\n" \
-       "List loaded kernel modules" \
-
-#endif \
-
-#if ENABLE_MODPROBE_SMALL \
-
-#define depmod_trivial_usage "[-n]" \
-
-#define depmod_full_usage "\n\n" \
-       "Generate modules.dep.bb" \
-     "\n" \
-     "\n	-n	Dry run: print file to stdout" \
-
-#define insmod_trivial_usage \
-	"FILE" IF_FEATURE_CMDLINE_MODULE_OPTIONS(" [SYMBOL=VALUE]...") \
-
-#define insmod_full_usage "\n\n" \
-       "Load kernel module" \
-
-#define rmmod_trivial_usage \
-       "MODULE..." \
-
-#define rmmod_full_usage "\n\n" \
-       "Unload kernel modules" \
-
-#define modprobe_trivial_usage \
-	"[-rq] MODULE" IF_FEATURE_CMDLINE_MODULE_OPTIONS(" [SYMBOL=VALUE]...") \
-
-#define modprobe_full_usage "\n\n" \
-       "	-r	Remove MODULE" \
-     "\n	-q	Quiet" \
-
-#endif \
 
 #if !ENABLE_MODPROBE_SMALL \
 
@@ -4195,36 +4195,6 @@
 #define nbdclient_full_usage "\n\n" \
        "Connect to HOST and provide network block device on BLOCKDEV" \
 
-#if ENABLE_NC_110_COMPAT \
-
-#define nc_trivial_usage \
-       "[OPTIONS] HOST PORT  - connect" \
-	IF_NC_SERVER("\n" \
-       "nc [OPTIONS] -l -p PORT [HOST] [PORT]  - listen" \
-	) \
-
-#define nc_full_usage "\n\n" \
-       "	-e PROG	Run PROG after connect (must be last)" \
-	IF_NC_SERVER( \
-     "\n	-l	Listen mode, for inbound connects" \
-     "\n	-lk	With -e, provides persistent server" \
-	) \
-     "\n	-p PORT	Local port" \
-     "\n	-s ADDR	Local address" \
-     "\n	-w SEC	Timeout for connects and final net reads" \
-	IF_NC_EXTRA( \
-     "\n	-i SEC	Delay interval for lines sent" /* ", ports scanned" */ \
-	) \
-     "\n	-n	Don't do DNS resolution" \
-     "\n	-u	UDP mode" \
-     "\n	-v	Verbose" \
-	IF_NC_EXTRA( \
-     "\n	-o FILE	Hex dump traffic" \
-     "\n	-z	Zero-I/O mode (scanning)" \
-	) \
-
-#endif \
-
 #if !ENABLE_NC_110_COMPAT \
 
 #if ENABLE_NC_SERVER || ENABLE_NC_EXTRA \
@@ -4274,6 +4244,36 @@
        "214     NOOP QUIT RSET HELP\n" \
        "quit\n" \
        "221 foobar closing connection\n" \
+
+#endif \
+
+#if ENABLE_NC_110_COMPAT \
+
+#define nc_trivial_usage \
+       "[OPTIONS] HOST PORT  - connect" \
+	IF_NC_SERVER("\n" \
+       "nc [OPTIONS] -l -p PORT [HOST] [PORT]  - listen" \
+	) \
+
+#define nc_full_usage "\n\n" \
+       "	-e PROG	Run PROG after connect (must be last)" \
+	IF_NC_SERVER( \
+     "\n	-l	Listen mode, for inbound connects" \
+     "\n	-lk	With -e, provides persistent server" \
+	) \
+     "\n	-p PORT	Local port" \
+     "\n	-s ADDR	Local address" \
+     "\n	-w SEC	Timeout for connects and final net reads" \
+	IF_NC_EXTRA( \
+     "\n	-i SEC	Delay interval for lines sent" /* ", ports scanned" */ \
+	) \
+     "\n	-n	Don't do DNS resolution" \
+     "\n	-u	UDP mode" \
+     "\n	-v	Verbose" \
+	IF_NC_EXTRA( \
+     "\n	-o FILE	Hex dump traffic" \
+     "\n	-z	Zero-I/O mode (scanning)" \
+	) \
 
 #endif \
 

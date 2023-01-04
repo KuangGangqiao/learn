@@ -3,7 +3,7 @@ mkfs.ext4 rootfs.img
 sudo mount -t ext4 -o loop rootfs.img ./fs
 sudo make install CONFIG_PREFIX=./fs
 cd fs
-sudo mkdir proc dev etc home mnt
+sudo mkdir proc dev etc home mnt lib
 sudo cp -r ../examples/bootfloppy/etc/* etc/
 cd ..
 sudo chmod -R 777 fs/
