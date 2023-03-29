@@ -81,8 +81,7 @@ LinkList delate_node(LinkList head, int index)
 			temp->next = n->next;
 			free(n);
 		}
-		temp = temp->next;
-	}
+		temp = temp->next; }
 
 	return head;
 }
