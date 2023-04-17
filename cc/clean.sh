@@ -1,1 +1,1 @@
-rm ./out/* -rf
+rm out -rf
