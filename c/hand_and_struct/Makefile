@@ -10,6 +10,10 @@ demo2:
 	gcc demo2.c -o demo2.o
 	gcc -g -o gdb_demo2 demo2.c
 
+demo3:
+	gcc demo3.c -o demo3.o
+	gcc -g -o gdb_demo3 demo3.c
+
 clean:
 	@rm *.o
 	@rm gdb_*
