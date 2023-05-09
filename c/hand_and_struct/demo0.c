@@ -46,7 +46,7 @@ void pet_init(struct pet *p)
 	p->my_dog = malloc(sizeof(p->my_dog));
 
 	//init dog
-	struct dog dog_cfg = {
+	static struct dog dog_cfg = {
 		.name = "TaiDi",
 		.age = 2,
 		.wigth = 8,
@@ -86,7 +86,7 @@ int main(void)
 	my_pet->my_dog->voice(4);
 	printf("dog_name: %s, addr: %p\n", my_pet->my_dog->name, my_pet->my_dog->name);
 	printf("dog_age: %d, addr: %p\n", my_pet->my_dog->age, &my_pet->my_dog->age);
-	//这里有问题
+	//这里有问题,解决了把struct dog dog_cfg声明为static就行了
 	printf("dog_wigth: %d, addr: %p\n", my_pet->my_dog->wigth, &my_pet->my_dog->wigth);
 	printf("dog_voice(): addr: %p\n", &my_pet->my_dog->voice);
 	//exce_voice(my_pet->my_dog);
