@@ -1,0 +1,58 @@
+在module.h 中 THIS_MODULE的定义如下：
+
+extern struct module __this_module;
+#define THIS_MODULE (&__this_module)
+
+即是保存了__this_module这个对象的地址，那这个__this_module在哪里定义呢？这就要从module的编译说起啦，
+如果编译过模块就会发现，会生成*.mod.c这样的一个文件，打开这个文件，就会发现，类似下面的定义：
+
+struct module __this_module
+__attribute__((section(".gnu.linkonce.this_module"))) = {
+ .name = KBUILD_MODNAME,
+ .init = init_module,
+#ifdef CONFIG_MODULE_UNLOAD
+ .exit = cleanup_module,
+#endif
+};
+
+
+这个文件是调用modpost生成的，modpost的main中有这样一段代码：
+
+    for (mod = modules; mod; mod = mod->next) {
+        if (mod->skip)
+            continue;
+
+        buf.pos = 0;
+
+        add_header(&buf, mod);
+        add_versions(&buf, mod);
+        add_depends(&buf, mod, modules);
+        add_moddevtable(&buf, mod);
+        add_srcversion(&buf, mod);
+
+        sprintf(fname, "%s.mod.c", mod->name);
+        write_if_changed(&buf, fname);
+    }
+
+
+其中的add_header就偷偷添加了__this_module 的定义
+
+static void add_header(struct buffer *b, struct module *mod)
+{
+    buf_printf(b, "#include <linux/module.h>\n");
+    buf_printf(b, "#include <linux/vermagic.h>\n");
+    buf_printf(b, "#include <linux/compiler.h>\n");
+    buf_printf(b, "\n");
+    buf_printf(b, "MODULE_INFO(vermagic, VERMAGIC_STRING);\n");
+    buf_printf(b, "\n");
+    buf_printf(b, "struct module __this_module\n");
+    buf_printf(b, "__attribute__((section(\".gnu.linkonce.this_module\"))) = {\n");
+    buf_printf(b, " .name = KBUILD_MODNAME,\n");
+    if (mod->has_init)
+        buf_printf(b, " .init = init_module,\n");
+    if (mod->has_cleanup)
+        buf_printf(b, "#ifdef CONFIG_MODULE_UNLOAD\n"
+                  " .exit = cleanup_module,\n"
+                  "#endif\n");
+    buf_printf(b, "};\n");
+}
