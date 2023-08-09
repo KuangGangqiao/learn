@@ -2,3 +2,98 @@
 
 linux 代码实现控制与被控制分离策略,被控制体会注册各种回调函数，
 由控制体实现这些回调函数
+
+example0:
+...
+..
+.
+//master
+static const struct mdiobb_ops bb_ops = {
+	.owner = THIS_MODULE,
+	.set_mdc = ax_bb_mdc,
+	.set_mdio_dir = ax_bb_dir,
+	.set_mdio_data = ax_bb_set_data,
+	.get_mdio_data = ax_bb_get_data,
+};
+
+static int ax_mii_init(struct net_device *dev)
+{
+	struct platform_device *pdev = to_platform_device(dev->dev.parent);
+	struct ei_device *ei_local = netdev_priv(dev);
+	struct ax_device *ax = to_ax_dev(dev);
+	int err;
+
+	ax->bb_ctrl.ops = &bb_ops;
+	ax->addr_memr = ei_local->mem + AX_MEMR;
+	ax->mii_bus = alloc_mdio_bitbang(&ax->bb_ctrl);
+	if (!ax->mii_bus) {
+		err = -ENOMEM;
+		goto out;
+	}
+
+	ax->mii_bus->name = "ax88796_mii_bus";
+	ax->mii_bus->parent = dev->dev.parent;
+	snprintf(ax->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
+		 pdev->name, pdev->id);
+
+	err = mdiobus_register(ax->mii_bus);
+	if (err)
+		goto out_free_mdio_bitbang;
+
+	return 0;
+
+ out_free_mdio_bitbang:
+	free_mdio_bitbang(ax->mii_bus);
+ out:
+	return err;
+}
+
+// slave
+...
+..
+.
+//这是操作函数的结果
+struct mdiobb_ops {
+	struct module *owner;
+
+	/* Set the Management Data Clock high if level is one,
+	 * low if level is zero.
+	 */
+	void (*set_mdc)(struct mdiobb_ctrl *ctrl, int level);
+
+	/* Configure the Management Data I/O pin as an input if
+	 * "output" is zero, or an output if "output" is one.
+	 */
+	void (*set_mdio_dir)(struct mdiobb_ctrl *ctrl, int output);
+
+	/* Set the Management Data I/O pin high if value is one,
+	 * low if "value" is zero.  This may only be called
+	 * when the MDIO pin is configured as an output.
+	 */
+	void (*set_mdio_data)(struct mdiobb_ctrl *ctrl, int value);
+
+	/* Retrieve the state Management Data I/O pin. */
+	int (*get_mdio_data)(struct mdiobb_ctrl *ctrl);
+};
+
+struct mdiobb_ctrl {
+	const struct mdiobb_ops *ops;
+};
+
+struct mii_bus *alloc_mdio_bitbang(struct mdiobb_ctrl *ctrl)
+{
+	struct mii_bus *bus;
+
+	bus = mdiobus_alloc();
+	if (!bus)
+		return NULL;
+
+	__module_get(ctrl->ops->owner);
+
+	bus->read = mdiobb_read;
+	bus->write = mdiobb_write;
+	bus->priv = ctrl;
+
+	return bus;
+}
+EXPORT_SYMBOL(alloc_mdio_bitbang);
