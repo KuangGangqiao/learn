@@ -1,1 +1,0 @@
-cmd_/home/jojo/work/learn/kernel/function/driver_attr/driver.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/jojo/work/learn/kernel/function/driver_attr/driver.ko /home/jojo/work/learn/kernel/function/driver_attr/driver.o /home/jojo/work/learn/kernel/function/driver_attr/driver.mod.o;  true

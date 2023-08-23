@@ -1,12 +1,11 @@
 ifneq ($(KERNELRELEASE),)
 obj-m:=device.o driver.o
 else
-KDIR :=/lib/modules/$(shell uname -r)/build
-PWD  :=$(shell pwd)
+
 all:
-	make -C $(KDIR) M=$(PWD) modules
+	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) modules
 clean:
-	rm -f *.ko *.o *.mod.o *.symvers *.cmd  *.mod.c *.order
+	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) clean
 
 install:
 	sudo insmod device.ko
