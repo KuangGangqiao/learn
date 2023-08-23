@@ -1,0 +1,1 @@
+cmd_/home/jojo/work/learn/kernel/function/driver_attr/driver.mod := { echo  /home/jojo/work/learn/kernel/function/driver_attr/driver.o; echo; } > /home/jojo/work/learn/kernel/function/driver_attr/driver.mod
