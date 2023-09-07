@@ -18,6 +18,10 @@ demo4:
 	gcc demo4.c -o demo4.o
 	gcc -g -o gdb_demo4 demo4.c
 
+demo5:
+	gcc demo5.c -rdynamic -o demo5.o
+	gcc -g -o gdb_demo5 demo5.c
+
 clean:
 	@rm *.o
 	@rm gdb_*
