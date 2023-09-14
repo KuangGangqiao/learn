@@ -29,3 +29,9 @@ include/linux/sysfs.h
 	_show：显示函数，cat该文件时，此函数被调用。
 	_store：写函数，echo内容到该文件时，此函数被调用。
 
+test:
+1. cat /sys/bus/platform/devices/duang/driver/peng， 或 cat /sys/bus/platform/drivers/duang/peng
+效果相同，因为devices里面包含的drivers
+
+2. sudo echo 2 > /sys/bus/platform/devices/duang/driver/peng， 或 sudo echo 2 > /sys/bus/platform/drivers/duang/peng
+也许需要chmod 777 打开权限才能写
