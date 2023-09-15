@@ -1,0 +1,20 @@
+1. const char *、char const*、char *const三者的区别
+
+1. const char *
+对于const char *s来说，const char*是指向常量的指针,而不是指针本身为常量,可以不被初始化.
+该指针可以指向常量也可以指向变量,只是从该指针的角度而言,它所指向的是常量。*s是不变的，
+s是可以改变的，const限定的*s。s被一个解引用运算符修饰，故s是个普通的指针，可以修改，
+但是s所指向的数据(即*s)由于const的修饰而不可通过指针s去修改。
+
+总结: *s(指针指向的内容)不能修改, s可以修改
+
+2. char *const
+char *const s声明(*const s)，(*const s)是char类型的。s被一个解引用运算符和一个const关键词修饰，
+故s是个不可修改的指针，但可通过指针s去修改s所指向的数据(即*s)。
+
+总结: *s(指针指向的内容)能修改, s不能修改
+
+3.char const*和const char *是一个意思
+
+大总结:
+如果不予许s被修改，也不予许修改s所指向的数据，则声明为const char * const s;
