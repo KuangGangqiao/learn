@@ -30,12 +30,6 @@ static int fake_config_intr(struct phy_device *phydev)
 	return 0;
 }
 
-static irqreturn_t fake_handle_interrupt(struct phy_device *phydev)
-{
-	printk("%s\n", __func__);
-	return IRQ_HANDLED;
-}
-
 static int fake_config_aneg(struct phy_device *phydev)
 {
 	printk("%s\n", __func__);
@@ -71,7 +65,6 @@ static struct phy_driver fake_driver[] = {
 	.config_init	= fake_config_init,
 	.config_aneg	= fake_config_aneg,
 	.config_intr	= fake_config_intr,
-	.handle_interrupt = fake_handle_interrupt,
 },
  };
 

@@ -191,12 +191,6 @@ static netdev_tx_t fakemac_start_xmit(struct sk_buff *skb, struct net_device *de
 	return NETDEV_TX_OK;
 }
 
-static void fakemac_tx_timeout(struct net_device *dev, unsigned int txqueue)
-{
-
-	printk("%s\n", __func__);
-}
-
 static void fakemac_set_multicast_list(struct net_device *dev)
 {
 	
@@ -224,9 +218,8 @@ static const struct net_device_ops fakemac_netdev_ops = {
 	.ndo_open		= fakemac_open,
 	.ndo_stop		= fakemac_stop,
 	.ndo_start_xmit		= fakemac_start_xmit,
-	.ndo_tx_timeout		= fakemac_tx_timeout,
 	.ndo_set_rx_mode	= fakemac_set_multicast_list,
-	.ndo_eth_ioctl		= _phy_do_ioctl_running,
+	.ndo_do_ioctl		= _phy_do_ioctl_running,
 	.ndo_validate_addr	= _eth_validate_addr,
 	.ndo_set_mac_address	= _eth_mac_addr,
 };
