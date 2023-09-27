@@ -67,7 +67,6 @@ static void fakemac_phy_link_change(struct net_device *dev)
 static int fakemac_phy_open(struct net_device *dev)
 {
 	struct fakemac_priv *priv = netdev_priv(dev);
-	struct phy_c45_device_ids c45_ids;
 	struct phy_device *phydev;
 	int ret;
 
@@ -78,75 +77,80 @@ static int fakemac_phy_open(struct net_device *dev)
 		return -1;
 	}
 
+#if 0
+	struct phy_c45_device_ids c45_ids;
 	/* try force creat phy device  */
 	phydev = phy_device_create(priv->mii_bus, 0, 0xbeefbeef, 0, &c45_ids);
 	if (!phydev) {
 		printk("phydev is NULL\n");
 		return -2;
 	}
+#endif
 
-	printk("====================\n");
-#if 1
+	phydev = phy_find_first(priv->mii_bus);
+	if (!phydev) {
+		printk("phydev find first failed\n");
+		return -2;
+	} else {
+		printk("phydev find first phy at addr: %d\n", phydev->mdio.addr);
+		printk("phydev find first phy phydev id: 0x%x\n", phydev->phy_id);
+	}
+
 	ret = phy_connect_direct(dev, phydev,
 				 fakemac_phy_link_change,
 				 PHY_INTERFACE_MODE_GMII);
 	if (ret) {
-		printk("phy connect direct fail\n");
+		printk("phy connect direct fail!\n");
 		return ret;
+	} else {
+		printk("phy connect direct success!\n");
 	}
 
-#endif
-#if 0
-	ret = phy_attach_direct(dev, phydev, 0x1, PHY_INTERFACE_MODE_GMII);
-	if (ret) {
-		printk("phy connect direct fail\n");
-		return ret;
-	}
-#endif
-
-#if 0
-	struct mii_bus *bus = phydev->mdio.bus;
-	struct device *d = &phydev->mdio.dev;
-	struct module *ndev_owner = NULL;
-	bool using_genphy= false;
-	int err;
-
-
-	if (dev)
-		ndev_owner = dev->dev.parent->driver->owner;
-
-	if (ndev_owner != bus->owner && !try_module_get(bus->owner)) {
-		phydev_err(phydev, "failed to get the bus module\n");
-		return -EIO;
-	}
-
-	get_device(d);
-
-	/* Assume that if there is no driver, that it doesn't
-	 * exist, and we should use the genphy driver.
-	 */
-	if (!d->driver) {
-		if (phydev->is_c45)
-			printk("is c45\n");
-		else
-			printk("not c45\n");
-		using_genphy = true;
-	}
-
-
-#endif
 	/* MAC doesn't support 1000T Half */
 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
 	/* support both flow controls */
 	phy_support_asym_pause(phydev);
-	//phydev->state = PHY_READY;
-	phy_init_hw(phydev);
-	phy_resume(phydev);
-	//phy_start(phydev);
-	//phy_start_aneg(phydev);
+	phy_start(phydev);
+	phy_start_aneg(phydev);
 	phy_attached_info(phydev);
 
 	return 0;
+}
+
+static void fakemac_phy_close(struct net_device *dev)
+{
+	struct phy_device *phydev = dev->phydev;
+	struct module *ndev_owner = NULL;
+	struct mii_bus *bus;
+
+	if (phy_is_started(phydev))
+		phy_stop(phydev);
+
+	if (phy_interrupt_is_valid(phydev))
+		phy_free_interrupt(phydev);
+
+	phydev->adjust_link = NULL;
+
+	if (phydev->mdio.dev.driver)
+		module_put(phydev->mdio.dev.driver->owner);
+
+	if (phy_driver_is_genphy(phydev) ||
+	    phy_driver_is_genphy_10g(phydev))
+		device_release_driver(&phydev->mdio.dev);
+
+	phy_device_reset(phydev, 1);
+
+	bus = phydev->mdio.bus;
+
+	put_device(&phydev->mdio.dev);
+
+	if (dev)
+		ndev_owner = dev->dev.parent->driver->owner;
+	if (ndev_owner != bus->owner)
+		module_put(bus->owner);
+
+	phydev = NULL;
+
 }
 
 int fakemac_mdio_unregister(struct net_device *ndev)
@@ -182,6 +186,7 @@ static int fakemac_open(struct net_device *dev)
 static int fakemac_stop(struct net_device *dev)
 {
 	printk("%s\n", __func__);
+	fakemac_phy_close(dev);
 	return 0;
 }
 
@@ -267,7 +272,8 @@ static int fakemac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
 		if (phyreg == 2 || phyreg == 3)
 			return 0xbeef;
 		
-	return 0;
+	// must return 0xffff
+	return 0xffff;
 }
 
 static int fakemac_mdio_write(struct mii_bus *bus, int phyaddr,
