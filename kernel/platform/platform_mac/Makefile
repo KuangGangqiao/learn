@@ -13,9 +13,9 @@ install:
 	sudo insmod fakemac_driver.ko
 
 uninstall:
-	sudo rmmod fakephy.ko
 	sudo rmmod fakemac_driver.ko
 	sudo rmmod fakemac_device.ko
+	sudo rmmod fakephy.ko
 
 endif
 

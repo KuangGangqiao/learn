@@ -54,6 +54,44 @@ static int fake_phy_probe(struct phy_device *phydev)
 	return 0;
 }
 
+static void fake_get_wol(struct phy_device *phydev,
+			   struct ethtool_wolinfo *wol)
+{
+	printk("%s\n", __func__);
+}
+
+static int fake_set_wol(struct phy_device *phydev,
+			  struct ethtool_wolinfo *wol)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
+static int fake_get_tunable(struct phy_device *phydev,
+			      struct ethtool_tunable *tuna, void *data)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
+static int fake_set_tunable(struct phy_device *phydev,
+			      struct ethtool_tunable *tuna, const void *data)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
+static void fake_get_stats(struct phy_device *phydev,
+			    struct ethtool_stats *stats, u64 *data)
+{
+	printk("%s\n", __func__);
+}
+
+static void fake_get_strings(struct phy_device *phydev, u8 *data)
+{
+	printk("%s\n", __func__);
+}
+
 static struct phy_driver fake_driver[] = {
 {
 	.phy_id		= 0xbeefbeef,
@@ -65,6 +103,12 @@ static struct phy_driver fake_driver[] = {
 	.config_init	= fake_config_init,
 	.config_aneg	= fake_config_aneg,
 	.config_intr	= fake_config_intr,
+	.get_wol	= fake_get_wol,
+	.set_wol	= fake_set_wol,
+	.get_tunable	= fake_get_tunable,
+	.set_tunable	= fake_set_tunable,
+	.get_stats	= fake_get_stats,
+	.get_strings	= fake_get_strings,
 },
  };
 

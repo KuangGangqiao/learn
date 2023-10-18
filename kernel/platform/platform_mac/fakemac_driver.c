@@ -95,7 +95,6 @@ static int fakemac_phy_open(struct net_device *dev)
 		printk("phydev find first phy at addr: %d\n", phydev->mdio.addr);
 		printk("phydev find first phy phydev id: 0x%x\n", phydev->phy_id);
 	}
-
 	ret = phy_connect_direct(dev, phydev,
 				 fakemac_phy_link_change,
 				 PHY_INTERFACE_MODE_GMII);
@@ -105,7 +104,6 @@ static int fakemac_phy_open(struct net_device *dev)
 	} else {
 		printk("phy connect direct success!\n");
 	}
-
 	/* MAC doesn't support 1000T Half */
 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
 	/* support both flow controls */
@@ -113,14 +111,13 @@ static int fakemac_phy_open(struct net_device *dev)
 	phy_start(phydev);
 	phy_start_aneg(phydev);
 	phy_attached_info(phydev);
-
 	return 0;
 }
 
 static void fakemac_phy_close(struct net_device *dev)
 {
 	struct phy_device *phydev = dev->phydev;
-	struct module *ndev_owner = NULL;
+	//struct module *ndev_owner = NULL;
 	struct mii_bus *bus;
 
 	if (phy_is_started(phydev))
@@ -131,12 +128,40 @@ static void fakemac_phy_close(struct net_device *dev)
 
 	phydev->adjust_link = NULL;
 
-	if (phydev->mdio.dev.driver)
-		module_put(phydev->mdio.dev.driver->owner);
+	if (phydev->sysfs_links) {
+		if (dev)
+			sysfs_remove_link(&dev->dev.kobj, "phydev");
+		// don't have attached_dev
+		//sysfs_remove_link(&phydev->mdio.dev.kobj, "attached_dev");
+	}
 
+	if (!phydev->attached_dev)
+		printk("have some thing\n");
+		//sysfs_remove_file(&phydev->mdio.dev.kobj,
+		//		  &dev_attr_phy_standalone.attr);
+
+	phy_suspend(phydev);
+	if (dev) {
+		printk("debug0\n");
+		phydev->attached_dev->phydev = NULL;
+		phydev->attached_dev = NULL;
+	}
+	phydev->phylink = NULL;
+
+	if (!phydev)
+		printk("phydev is NULL\n");
+
+	if (phydev->mdio.dev.driver) {
+		printk("debug1\n");
+		module_put(phydev->mdio.dev.driver->owner);
+	}
+
+	printk("toto\n");
 	if (phy_driver_is_genphy(phydev) ||
-	    phy_driver_is_genphy_10g(phydev))
+	    phy_driver_is_genphy_10g(phydev)) {
+		printk("debug2\n");
 		device_release_driver(&phydev->mdio.dev);
+	}
 
 	phy_device_reset(phydev, 1);
 
@@ -144,13 +169,14 @@ static void fakemac_phy_close(struct net_device *dev)
 
 	put_device(&phydev->mdio.dev);
 
+#if 0
 	if (dev)
 		ndev_owner = dev->dev.parent->driver->owner;
 	if (ndev_owner != bus->owner)
 		module_put(bus->owner);
+#endif
 
 	phydev = NULL;
-
 }
 
 int fakemac_mdio_unregister(struct net_device *ndev)
@@ -257,12 +283,42 @@ static int fakemac_phy_ethtool_set_link_ksettings(struct net_device *ndev,
 	printk("%s\n", __func__);
 	return 0;
 }
+void fakemac_get_wol(struct net_device *ndev, struct ethtool_wolinfo *info)
+{
+	printk("%s\n", __func__);
+
+}
+
+int fakemac_set_wol(struct net_device *ndev, struct ethtool_wolinfo *info)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
+int fakemac_get_tunable(struct net_device *ndev,
+			const struct ethtool_tunable *tun, void *v)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
+int fakemac_set_tunable(struct net_device *ndev,
+			const struct ethtool_tunable *tun, const void *v)
+{
+	printk("%s\n", __func__);
+	return 0;
+}
+
 
 static const struct ethtool_ops fakemac_ethtool_ops = {
 	.get_drvinfo = fakemac_get_drvinfo,
 	.get_link = fakemac_ethtool_op_get_link,
 	.get_link_ksettings = fakemac_phy_ethtool_get_link_ksettings,
 	.set_link_ksettings = fakemac_phy_ethtool_set_link_ksettings,
+	.get_wol = fakemac_get_wol,
+	.set_wol = fakemac_set_wol,
+	.get_tunable = fakemac_get_tunable,
+	.set_tunable = fakemac_set_tunable,
 };
 
 static int fakemac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
@@ -393,6 +449,7 @@ static 	int fakemac_driver_remove(struct platform_device *pdev)
 static struct platform_driver fakemac_driver =
 {
 	.driver = {
+		.owner = THIS_MODULE,
 		.name = "fakemac",
 	},
 	.probe = fakemac_driver_probe,
