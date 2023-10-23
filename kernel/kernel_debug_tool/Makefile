@@ -1,4 +1,4 @@
-OBJ_KERNEL=linux-4.14.191
+OBJ_KERNEL=~/linux-5.4.18
 OBJ_PATH=
 
 all:
