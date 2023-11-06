@@ -21,7 +21,11 @@ static int __init io_init(void)
 	t->name = "test";
 	printk("addr:%p\n", t);
 	ret  = readl((volatile void __iomem *)t);
-	printk("ret:%d\n", ret);
+	printk("before ret:%d\n", ret);
+	printk("ret set:%d\n", 10);
+	writel(10, (volatile void __iomem *)t);
+	ret  = readl((volatile void __iomem *)t);
+	printk("after ret:%d\n", ret);
 	
 	return 0;
 }
